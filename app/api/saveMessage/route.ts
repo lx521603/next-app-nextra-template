@@ -2,43 +2,55 @@
 import nodemailer from 'nodemailer';
 
 export async function POST(req: Request) {
-  // Netlify 环境变量检查
   const mailUser = process.env.MAIL_USER;
   const mailPass = process.env.MAIL_PASS;
   
-  console.log('Environment check:', { 
-    hasMailUser: !!mailUser,
-    hasMailPass: !!mailPass,
-    nodeEnv: process.env.NODE_ENV
-  });
-
   if (!mailUser || !mailPass) {
-    console.error('Missing email environment variables');
     return new Response(
-      JSON.stringify({ 
-        error: '服务器配置错误，请联系管理员',
-        debug: process.env.NODE_ENV === 'development' ? '环境变量未设置' : undefined
-      }), 
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      }
+      JSON.stringify({ error: '服务器配置错误' }), 
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
 
   try {
     const { name, phone, message } = await req.json();
 
-    // 输入验证
     if (!name?.trim() || !phone?.trim() || !message?.trim()) {
       return new Response(
         JSON.stringify({ error: '所有字段都是必填的' }), 
-        {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        }
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
+
+    const transporter = nodemailer.createTransport({
+      host: 'wednesday.mxrouting.net',
+      port: 465,
+      secure: true,
+      auth: { user: mailUser, pass: mailPass },
+    });
+
+    await transporter.sendMail({
+      from: mailUser,
+      to: mailUser,
+      subject: '网站新留言',
+      text: `姓名: ${name}\n电话: ${phone}\n留言: ${message}`,
+    });
+
+    return new Response(
+      JSON.stringify({ success: true, message: '留言发送成功' }), 
+      { status: 200, headers: { 'Content-Type': 'application/json' } }
+    );
+
+  } catch (error) {
+    console.error('发送邮件失败:', error);
+    
+    // 简化错误处理，移除调试信息
+    return new Response(
+      JSON.stringify({ error: '发送失败，请稍后重试' }), 
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+}
 
     const transporter = nodemailer.createTransport({
       host: 'wednesday.mxrouting.net',
