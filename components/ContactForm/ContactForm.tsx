@@ -5,7 +5,7 @@ export default function ContactForm() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
-  const [success, setSuccess] = useState(false); // ✅ 这里加上
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async () => {
     try {
@@ -13,7 +13,7 @@ export default function ContactForm() {
         method: 'POST',
         body: JSON.stringify({ name, phone, message }),
       });
-      setSuccess(true); // ✅ 现在不会报错
+      setSuccess(true);
       setName(''); 
       setPhone(''); 
       setMessage('');
@@ -23,7 +23,7 @@ export default function ContactForm() {
   };
 
   return (
-    <Stack spacing="sm">
+    <Stack gap="sm"> {/* 将 spacing 改为 gap */}
       <TextInput label="名字" value={name} onChange={(e) => setName(e.target.value)} required />
       <TextInput label="电话" value={phone} onChange={(e) => setPhone(e.target.value)} required />
       <Textarea label="留言" value={message} onChange={(e) => setMessage(e.target.value)} required />
