@@ -1,57 +1,31 @@
 // app/api/saveMessage/route.ts
+import { NextResponse } from 'next/server' // 也可以使用原生 Response
 import nodemailer from 'nodemailer';
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
+  // 检查环境变量
   const mailUser = process.env.MAIL_USER;
   const mailPass = process.env.MAIL_PASS;
-  
   if (!mailUser || !mailPass) {
-    return new Response(
-      JSON.stringify({ error: '服务器配置错误' }), 
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    return NextResponse.json(
+      { error: '服务器配置错误' },
+      { status: 500 }
     );
   }
 
   try {
-    const { name, phone, message } = await req.json();
+    // 解析请求体
+    const { name, phone, message } = await request.json();
 
+    // 验证必要字段
     if (!name?.trim() || !phone?.trim() || !message?.trim()) {
-      return new Response(
-        JSON.stringify({ error: '所有字段都是必填的' }), 
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      return NextResponse.json(
+        { error: '所有字段都是必填的' },
+        { status: 400 }
       );
     }
 
-    const transporter = nodemailer.createTransport({
-      host: 'wednesday.mxrouting.net',
-      port: 465,
-      secure: true,
-      auth: { user: mailUser, pass: mailPass },
-    });
-
-    await transporter.sendMail({
-      from: mailUser,
-      to: mailUser,
-      subject: '网站新留言',
-      text: `姓名: ${name}\n电话: ${phone}\n留言: ${message}`,
-    });
-
-    return new Response(
-      JSON.stringify({ success: true, message: '留言发送成功' }), 
-      { status: 200, headers: { 'Content-Type': 'application/json' } }
-    );
-
-  } catch (error) {
-    console.error('发送邮件失败:', error);
-    
-    // 简化错误处理，移除调试信息
-    return new Response(
-      JSON.stringify({ error: '发送失败，请稍后重试' }), 
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
-  }
-}
-
+    // 配置邮件传输器
     const transporter = nodemailer.createTransport({
       host: 'wednesday.mxrouting.net',
       port: 465,
@@ -62,12 +36,10 @@ export async function POST(req: Request) {
       },
     });
 
-    // 验证连接配置
-    await transporter.verify();
-
-    const mailResult = await transporter.sendMail({
+    // 发送邮件
+    await transporter.sendMail({
       from: mailUser,
-      to: mailUser, // 或者你想发送到的其他邮箱
+      to: mailUser, // 或您想发送到的其他邮箱
       subject: '网站新留言',
       text: `姓名: ${name}\n电话: ${phone}\n留言: ${message}`,
       html: `
@@ -76,35 +48,20 @@ export async function POST(req: Request) {
         <p><strong>电话:</strong> ${phone}</p>
         <p><strong>留言内容:</strong></p>
         <p>${message.replace(/\n/g, '<br>')}</p>
-        <hr>
-        <small>发送时间: ${new Date().toLocaleString('zh-CN')}</small>
       `,
     });
 
-    console.log('Email sent successfully:', mailResult.messageId);
-
-    return new Response(
-      JSON.stringify({ 
-        success: true, 
-        message: '留言发送成功' 
-      }), 
-      {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      }
+    // 返回成功响应
+    return NextResponse.json(
+      { success: true, message: '留言发送成功' },
+      { status: 200 }
     );
 
   } catch (error) {
-    console.error('Email sending failed:', error);
-    return new Response(
-      JSON.stringify({ 
-        error: '发送失败，请稍后重试',
-        debug: process.env.NODE_ENV === 'development' ? error.message : undefined
-      }), 
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      }
+    console.error('发送邮件失败:', error);
+    return NextResponse.json(
+      { error: '发送失败，请稍后重试' },
+      { status: 500 }
     );
   }
 }
