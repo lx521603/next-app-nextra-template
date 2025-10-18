@@ -24,7 +24,7 @@ export function ReleaseNotes() {
     return (
       <Stack mt={24} w="100%" align="center">
         <Group>
-          <Text>Loading releases...</Text>
+          <Text>测试位置...</Text>
           <Loader type="dots" />
         </Group>
         <Skeleton height={200} width="100%" radius={12} />

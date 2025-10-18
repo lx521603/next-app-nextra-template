@@ -14,7 +14,7 @@ export function Welcome() {
         <ProductHunt />
       </Center>
       <Title maw="90vw" mx="auto" className={classes.title} ta="center">
-        Welcome to Mantine Next.js +
+        欢迎来到我的基地
         <TextAnimate
           animate="in"
           by="character"
@@ -29,13 +29,12 @@ export function Welcome() {
           }}
           gradient={{ from: 'pink', to: 'yellow' }}
         >
-          Nextra template
+          Asura
         </TextAnimate>
       </Title>
 
       <Text c="dimmed" ta="center" size="xl" maw={580} mx="auto" mt="sm">
-        This starter Next.js project includes a minimal setup for server side rendering, if you want
-        to learn more on Mantine + Next.js integration follow{' '}
+        在这个空间，我记录我的发现与灵感，也希望分享给同样热爱探索、喜欢尝鲜的朋友。每一次点击、每一次出发，都是一场新的探险。{' '}
         <Anchor href="https://mantine.dev/guides/next/">this guide</Anchor>. To get started edit{' '}
         <Code fz="xl">page.tsx</Code> file.
       </Text>

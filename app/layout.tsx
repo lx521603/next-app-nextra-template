@@ -10,6 +10,7 @@ import { MantineFooter, MantineNavBar } from '@/components';
 import config from '@/config';
 import pack from '../package.json';
 import { theme } from '../theme';
+import '@mantine/core/styles.css';
 
 import './global.css';
 
@@ -38,7 +39,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             banner={
               <Banner storageKey={`release-notes-${pack.version}`}>
                 ✨ v{pack.version} Released -{' '}
-                <a href="/docs/release-notes">See the release notes</a>
+                <a href="/docs/release-notes">看更新笔记</a>
               </Banner>
             }
             navbar={<MantineNavBar />}

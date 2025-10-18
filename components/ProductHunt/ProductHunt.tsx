@@ -1,7 +1,7 @@
 export function ProductHunt() {
   return (
     <a
-      href="https://www.producthunt.com/products/mantine-nextjs-nextra-template?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-mantine&#0045;nextjs&#0045;nextra&#0045;template"
+      href="https://velvify.com"
       rel="noreferrer"
       target="_blank"
     >

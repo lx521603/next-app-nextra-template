@@ -20,7 +20,7 @@ export function ColorSchemeToggle() {
           setTheme('light');
         }}
       >
-        Light
+        明
       </Button>
       <Button
         onClick={() => {
@@ -28,7 +28,7 @@ export function ColorSchemeToggle() {
           setTheme('dark');
         }}
       >
-        Dark
+        暗
       </Button>
       <Button
         onClick={() => {
@@ -36,7 +36,7 @@ export function ColorSchemeToggle() {
           setTheme('system');
         }}
       >
-        Auto
+        自动
       </Button>
     </Group>
   );

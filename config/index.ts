@@ -57,7 +57,7 @@ export default {
    */
   head: {
     mantine: {
-      defaultColorScheme: 'dark',
+      defaultColorScheme: 'light',
       nonce: '8IBTHwOdqNKAWeKl7plt8g==',
     },
   },

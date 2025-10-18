@@ -4,30 +4,35 @@ export default {
   },
   docs: {
     type: 'page',
-    title: 'Documentation',
+    title: '文档',
   },
   community: {
-    title: 'Community',
+    title: '社交',
     type: 'menu',
     items: {
       blog: {
-        title: 'Blog',
+        title: '博客',
         href: 'https://undolog.com/',
       },
       medium: {
-        title: 'Medium',
-        href: 'https://medium.com/@giovambattista.fazioli',
+        title: 'Telegram',
+        href: 'https://t.me/Asura1980',
       },
     },
   },
   about: {
     type: 'page',
-    title: 'About',
-    href: 'https://github.com/gfazioli',
+    title: '关于',
   },
-  sponsor: {
+  tags: {
+    title: '标签',
     type: 'page',
-    title: 'Sponsors',
-    href: 'https://github.com/sponsors/gfazioli?o=esb',
-  },
+    href: '/tags'
+  }
+  
+//  sponsor: {
+ //   type: 'page',
+   // title: 'Sponsors',
+  //  href: 'https://github.com/sponsors/gfazioli?o=esb',
+ // },
 };
