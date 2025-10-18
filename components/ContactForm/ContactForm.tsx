@@ -11,7 +11,6 @@ export default function ContactForm() {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    // 基本验证
     if (!name.trim() || !phone.trim() || !message.trim()) {
       setError('请填写所有字段');
       return;
@@ -40,11 +39,15 @@ export default function ContactForm() {
       setPhone(''); 
       setMessage('');
       
-      // 3秒后隐藏成功提示
       setTimeout(() => setSuccess(false), 3000);
     } catch (e) {
       console.error('提交错误:', e);
-      setError(e.message || '提交失败，请稍后重试');
+      // 修复类型错误
+      if (e instanceof Error) {
+        setError(e.message);
+      } else {
+        setError('提交失败，请稍后重试');
+      }
     } finally {
       setLoading(false);
     }
