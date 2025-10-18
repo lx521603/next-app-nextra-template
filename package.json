@@ -24,6 +24,7 @@
     "release:major": "yarn version major"
   },
   "dependencies": {
+    "@gfazioli/mantine-clock": "^2.1.2",
     "@gfazioli/mantine-marquee": "^2.6.1",
     "@gfazioli/mantine-text-animate": "^2.3.1",
     "@mantine/carousel": "^8.3.5",

@@ -1,13 +1,17 @@
 'use client';
 
+import { useState } from 'react';
 import { TextAnimate } from '@gfazioli/mantine-text-animate';
-import { IconBrandGithub, IconExternalLink } from '@tabler/icons-react';
-import { Anchor, Button, Center, Code, Paper, Text, Title } from '@mantine/core';
+import { IconBrandGithub, IconExternalLink, IconMessageCircle } from '@tabler/icons-react';
+import { Anchor, Button, Center, Code, Paper, Text, Title, Modal } from '@mantine/core';
 import pack from '../../package.json';
 import { ProductHunt } from '../ProductHunt/ProductHunt';
+import ContactForm from '@/components/ContactForm/ContactForm';
 import classes from './Welcome.module.css';
 
 export function Welcome() {
+  const [opened, setOpened] = useState(false);
+
   return (
     <>
       <Center my={64}>
@@ -24,9 +28,7 @@ export function Welcome() {
           segmentDelay={0.2}
           duration={2}
           animation="scale"
-          animateProps={{
-            scaleAmount: 3,
-          }}
+          animateProps={{ scaleAmount: 3 }}
           gradient={{ from: 'pink', to: 'yellow' }}
         >
           Asura
@@ -41,10 +43,9 @@ export function Welcome() {
 
       <Center>
         <Button
-          href="https://github.com/gfazioli/next-app-nextra-template"
-          component="a"
-          rightSection={<IconExternalLink />}
-          leftSection={<IconBrandGithub />}
+          onClick={() => setOpened(true)}  // 点击打开 Modal
+          leftSection={<IconMessageCircle />}  // 留言图标
+          rightSection={<IconExternalLink />}  // 保留右侧外链图标
           variant="outline"
           px={32}
           radius={256}
@@ -52,10 +53,21 @@ export function Welcome() {
           mx="auto"
           mt="xl"
         >
-          Use template v{pack.version}
+          给我留言
         </Button>
       </Center>
 
+      {/* 留言 Modal */}
+      <Modal
+        opened={opened}
+        onClose={() => setOpened(false)}
+        title="给我留言"
+        size="lg"
+      >
+        <ContactForm />
+      </Modal>
+
+      {/*
       <Paper shadow="xl" p={8} mih={300} my={32} bg="dark.9" mx="auto" radius={8}>
         <TextAnimate.Typewriter
           inherit
@@ -74,6 +86,7 @@ export function Welcome() {
           ]}
         />
       </Paper>
+      */}
     </>
   );
 }

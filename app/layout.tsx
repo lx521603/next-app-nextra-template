@@ -11,7 +11,7 @@ import config from '@/config';
 import pack from '../package.json';
 import { theme } from '../theme';
 import '@mantine/core/styles.css';
-
+import '@gfazioli/mantine-clock/styles.css';
 import './global.css';
 
 export const metadata = config.metadata;
@@ -36,6 +36,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <MantineProvider theme={theme} defaultColorScheme={head.mantine.defaultColorScheme}>
           <Layout
+            key="nextra-layout" // 添加这个 key
             banner={
               <Banner storageKey={`release-notes-${pack.version}`}>
                 ✨ v{pack.version} Released -{' '}

@@ -2827,6 +2827,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gfazioli/mantine-clock@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "@gfazioli/mantine-clock@npm:2.1.2"
+  peerDependencies:
+    "@mantine/core": ">=7.0.0"
+    "@mantine/hooks": ">=7.0.0"
+    dayjs: ^1.11.13
+    react: ^18.x || ^19.x
+    react-dom: ^18.x || ^19.x
+  checksum: 10c0/7d95afa1f45b7e8035e75094573ed895eab268eca23dcd62a5db8bbfb0d4f91d763993f572f819a2781aa72aef65470bba2b08219c30c36cd24c4c3f75b5630d
+  languageName: node
+  linkType: hard
+
 "@gfazioli/mantine-marquee@npm:^2.6.1":
   version: 2.6.1
   resolution: "@gfazioli/mantine-marquee@npm:2.6.1"
@@ -14217,6 +14230,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.28.4"
     "@eslint/js": "npm:^9.36.0"
+    "@gfazioli/mantine-clock": "npm:^2.1.2"
     "@gfazioli/mantine-marquee": "npm:^2.6.1"
     "@gfazioli/mantine-text-animate": "npm:^2.3.1"
     "@ianvs/prettier-plugin-sort-imports": "npm:^4.7.0"
