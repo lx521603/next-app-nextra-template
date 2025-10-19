@@ -3,7 +3,8 @@ import { Container, Title, Group, Badge, Text, SimpleGrid, Card } from '@mantine
 import { getAllTags, getAllPosts } from '../../lib/posts';
 import { IconTags, IconArticle, IconStar } from '@tabler/icons-react';
 
-export default function TagsPage() {
+// 使用 async 函数，但不使用 'use server'
+export default async function TagsPage() {
   const tags = getAllTags();
   const allPosts = getAllPosts();
   

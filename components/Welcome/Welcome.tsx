@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { TextAnimate } from '@gfazioli/mantine-text-animate';
 import { IconBrandGithub, IconExternalLink, IconMessageCircle } from '@tabler/icons-react';
 import { Anchor, Button, Center, Code, Paper, Text, Title, Modal } from '@mantine/core';
-import pack from '../../package.json';
-import { ProductHunt } from '../ProductHunt/ProductHunt';
+// import pack from '../../package.json';
+// import { ProductHunt } from '../ProductHunt/ProductHunt';
 import ContactForm from '@/components/ContactForm/ContactForm';
 import classes from './Welcome.module.css';
 
@@ -14,9 +14,13 @@ export function Welcome() {
 
   return (
     <>
+      {/* 屏蔽 ProductHunt 部分 */}
+      {/*
       <Center my={64}>
         <ProductHunt />
       </Center>
+      */}
+      
       <Title maw="90vw" mx="auto" className={classes.title} ta="center">
         欢迎来到我的基地
         <TextAnimate
@@ -43,9 +47,9 @@ export function Welcome() {
 
       <Center>
         <Button
-          onClick={() => setOpened(true)}  // 点击打开 Modal
-          leftSection={<IconMessageCircle />}  // 留言图标
-          rightSection={<IconExternalLink />}  // 保留右侧外链图标
+          onClick={() => setOpened(true)}
+          leftSection={<IconMessageCircle />}
+          rightSection={<IconExternalLink />}
           variant="outline"
           px={32}
           radius={256}
@@ -57,7 +61,6 @@ export function Welcome() {
         </Button>
       </Center>
 
-      {/* 留言 Modal */}
       <Modal
         opened={opened}
         onClose={() => setOpened(false)}

@@ -13,7 +13,6 @@ const withNextra = nextra({
   contentDirBasePath: '/docs',
 })
 
-
 export default withNextra(
   withBundleAnalyzer({
     reactStrictMode: false,

@@ -1,6 +1,9 @@
 import '@gfazioli/mantine-marquee/styles.layer.css';
 import '@gfazioli/mantine-text-animate/styles.layer.css';
 import '@mantine/core/styles.layer.css';
+import '@mantine/core/styles.css';
+import '@mantine/carousel/styles.css';
+import '@gfazioli/mantine-clock/styles.css';
 
 import { Layout } from 'nextra-theme-docs';
 import { Banner, Head } from 'nextra/components';
@@ -10,8 +13,6 @@ import { MantineFooter, MantineNavBar } from '@/components';
 import config from '@/config';
 import pack from '../package.json';
 import { theme } from '../theme';
-import '@mantine/core/styles.css';
-import '@gfazioli/mantine-clock/styles.css';
 import './global.css';
 
 export const metadata = config.metadata;
@@ -36,17 +37,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <MantineProvider theme={theme} defaultColorScheme={head.mantine.defaultColorScheme}>
           <Layout
-            key="nextra-layout" // 添加这个 key
+            key="nextra-layout"
             banner={
-              <Banner storageKey={`release-notes-${pack.version}`}>
+              <Banner key="banner" storageKey={`release-notes-${pack.version}`}>
                 ✨ v{pack.version} Released -{' '}
                 <a href="/docs/release-notes">看更新笔记</a>
               </Banner>
             }
-            navbar={<MantineNavBar />}
+            navbar={<MantineNavBar key="navbar" />}
             pageMap={pageMap}
             docsRepositoryBase={nextraLayout.docsRepositoryBase}
-            footer={<MantineFooter />}
+            footer={<MantineFooter key="footer" />}
             sidebar={nextraLayout.sidebar}
           >
             {children}
