@@ -8,8 +8,11 @@ import { redirect } from 'next/navigation';
 
 // 移除 interface PostPageProps {}
 
-export default function PostPage({ params }: { params: { slug: string[] } }) {
-  const originalPathSegments = params.slug; 
+// 将组件改为异步函数
+export default async function PostPage({ params }: { params: Promise<{ slug: string[] }> }) {
+  // 使用 await 解析 params Promise
+  const resolvedParams = await params;
+  const originalPathSegments = resolvedParams.slug; 
   
   // 拼接路径，例如：shot/bs/bsqlj
   const pathSuffix = originalPathSegments.join('/');
