@@ -2,20 +2,17 @@
 
 import { redirect } from 'next/navigation';
 
-interface PostPageProps {
-  params: {
-    slug: string[];
-  };
-}
+// 移除 interface PostPageProps {}
 
 /**
- * 这个页面现在只负责将流量重定向到正确的 /docs 路径。
+ * 这个页面现在只执行服务器端重定向。
+ * 直接在函数签名中定义 params 的类型，避免 TypeScript 冲突。
  */
-export default function PostPage({ params }: PostPageProps) {
+// 页面组件函数签名现在是 { params: { slug: string[] } }
+export default function PostPage({ params }: { params: { slug: string[] } }) {
   const originalPathSegments = params.slug; 
   
-  // 原始路径示例：['shot', 'bs', 'bsqlj']
-  // 拼接成 /shot/bs/bsqlj
+  // 拼接路径，例如：shot/bs/bsqlj
   const pathSuffix = originalPathSegments.join('/');
   
   // 目标 URL：/docs/shot/bs/bsqlj
@@ -23,12 +20,10 @@ export default function PostPage({ params }: PostPageProps) {
   
   console.log(`正在从 /carousel/${pathSuffix} 重定向到 ${targetUrl}`);
 
-  // 使用 Next.js 的 redirect 函数进行永久重定向 (308 状态码)
-  // 如果是 Nextra 文档，通常会希望保留永久性，所以使用 308
+  // 使用 Next.js 的 redirect 函数执行重定向
   redirect(targetUrl); 
 
-  // 由于 redirect 会抛出异常，所以下面的代码实际上不会执行，但为了函数完整性保留
-  return null;
+  return null; 
 }
 
 // 暂时返回空数组
