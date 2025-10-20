@@ -4,7 +4,6 @@ import matter from 'gray-matter';
 import { NextResponse, type NextRequest } from 'next/server';
 
 // --- 接口定义 ---
-// 注意：CarouselImage 现在代表的是单个轮播项
 interface CarouselImage {
   url: string;
   alt: string;
@@ -14,14 +13,14 @@ interface CarouselImage {
 
 interface PostFrontmatter {
   title: string;
-  // 新增 gallery 字段，支持字符串数组或单个字符串（Nextra/Markdown 格式可能解析为两者之一）
-  gallery?: string[] | string;
+  // 新增 gallery 字段，支持字符串数组或单个字符串
+  gallery?: string[] | string | unknown; // 允许 unknown 以应对 matter 解析的任何类型
   
   // 保持旧的单图字段作为回退
-  cover?: string;      
-  img?: string;        
-  image?: string;       
-  coverImage?: string; 
+  cover?: string | unknown;      
+  img?: string | unknown;        
+  image?: string | unknown;       
+  coverImage?: string | unknown; 
   
   show?: boolean;         
   showInCarousel?: boolean; 
@@ -32,9 +31,8 @@ interface PostFrontmatter {
 
 /**
  * 核心修改：根据 Frontmatter 提取所有用于照片墙的图片 URL 列表。
- * 优先级: gallery (数组) > gallery (单张) > img/image/cover (单张)
- * @param frontmatter 文章的 Frontmatter 数据
- * @returns 包含所有轮播图片 URL 的数组
+ * 优先级: gallery (数组) > gallery (单张) > 其它单图字段
+ * * NOTE: 增加防御性检查，确保只处理有效的字符串值。
  */
 function getGalleryUrls(frontmatter: PostFrontmatter): string[] {
     const urls: string[] = [];
@@ -42,29 +40,33 @@ function getGalleryUrls(frontmatter: PostFrontmatter): string[] {
     // 1. 优先检查 gallery 字段
     if (frontmatter.gallery) {
         if (Array.isArray(frontmatter.gallery)) {
-            // 如果是数组，直接返回所有有效 URL
-            return frontmatter.gallery.filter(url => typeof url === 'string' && url.length > 0);
-        } else if (typeof frontmatter.gallery === 'string') {
-            // 如果是单个字符串，作为单个图片返回
-            urls.push(frontmatter.gallery);
-            return urls;
+            // 如果是数组，过滤掉所有非字符串或空字符串的项
+            const validUrls = frontmatter.gallery.filter(url => typeof url === 'string' && url.trim().length > 0);
+            if (validUrls.length > 0) return validUrls;
+        } else if (typeof frontmatter.gallery === 'string' && frontmatter.gallery.trim().length > 0) {
+            // 如果是单个字符串
+            return [frontmatter.gallery];
         }
     }
     
     // 2. 如果 gallery 不存在或无效，回退到旧的单图字段
     // 优先级: cover > img > image > coverImage
-    if (frontmatter.cover && typeof frontmatter.cover === 'string') {
-        urls.push(frontmatter.cover);
-    } else if (frontmatter.img && typeof frontmatter.img === 'string') {
-        urls.push(frontmatter.img);
-    } else if (frontmatter.image && typeof frontmatter.image === 'string') {
-        urls.push(frontmatter.image);
-    } else if (frontmatter.coverImage && typeof frontmatter.coverImage === 'string') {
-        urls.push(frontmatter.coverImage);
+    
+    // 辅助检查函数，确保字段是有效的非空字符串
+    const getValidUrl = (field: unknown): string | null => 
+        (typeof field === 'string' && field.trim().length > 0) ? field : null;
+
+    const singleUrl = 
+        getValidUrl(frontmatter.cover) ||
+        getValidUrl(frontmatter.img) ||
+        getValidUrl(frontmatter.image) ||
+        getValidUrl(frontmatter.coverImage);
+        
+    if (singleUrl) {
+        return [singleUrl];
     }
 
-    // 此时 urls 数组最多包含一个元素
-    return urls;
+    return [];
 }
 
 
@@ -83,20 +85,25 @@ const ROOT_DIRECTORY = path.join(process.cwd(), 'content');
 async function crawlDirectory(dir: string): Promise<CarouselImage[]> {
     let results: CarouselImage[] = [];
 
-    // 检查目录是否存在且可读
     try {
-        await fs.access(dir);
-    } catch (e) {
-        console.warn(`[API WARNING] MDX 目录不存在或不可访问: ${dir}`);
-        return [];
-    }
-
-    try {
+        // 尝试获取目录下的文件列表
         const files = await fs.readdir(dir);
+
+        // 核心防御性编程: 确保 files 确实是一个数组，防止 Netlify 运行时环境中 fs 库的异常返回导致 for...of 报错
+        if (!Array.isArray(files)) {
+             console.error(`❌ [API/Carousel] fs.readdir 返回值不是数组: ${dir}`);
+             return [];
+        }
 
         for (const file of files) {
             const fullPath = path.join(dir, file);
-            const stat = await fs.stat(fullPath);
+            let stat;
+            try {
+                stat = await fs.stat(fullPath);
+            } catch (e) {
+                // 如果 stat 失败（例如文件权限问题），跳过此文件/目录
+                continue;
+            }
 
             // 计算相对于 ROOT_DIRECTORY 的相对路径
             const relativePath = path.relative(ROOT_DIRECTORY, fullPath);
@@ -104,36 +111,42 @@ async function crawlDirectory(dir: string): Promise<CarouselImage[]> {
             if (stat.isDirectory()) {
                 // 递归调用
                 const subResults = await crawlDirectory(fullPath);
-                results = results.concat(subResults);
+                // 再次防御性检查：确保 subResults 是数组，防止 sub-call 异常影响当前 call
+                if (Array.isArray(subResults)) {
+                    results = results.concat(subResults);
+                }
             } else if (stat.isFile() && (file.endsWith('.mdx') || file.endsWith('.md'))) {
                 
-                const fileContent = await fs.readFile(fullPath, 'utf8');
+                let fileContent;
+                try {
+                    fileContent = await fs.readFile(fullPath, 'utf8');
+                } catch (e) {
+                    console.error(`❌ 无法读取文件内容: ${fullPath}`, e);
+                    continue; // 跳过无法读取的文件
+                }
+
                 const { data } = matter(fileContent);
                 const frontmatter = data as PostFrontmatter;
 
                 if (shouldShowInCarousel(frontmatter)) {
                     
-                    // 核心修改：获取所有图片 URL
                     const imageUrls = getGalleryUrls(frontmatter);
 
                     if (imageUrls.length > 0) {
-                        // 移除文件后缀 (.mdx/.md)
                         let slug = relativePath.replace(/\.(mdx|md)$/, '');
+                        // 如果是 index.mdx/md，链接应该指向父目录 (例如 /docs/api/index.mdx -> /docs/api)
+                        // 注意：Nextra通常会处理掉 /index 部分，但为了安全，这里保持您的原始逻辑
                         
-                        // 统一链接前缀
                         const link = `/carousel/${slug}`; 
 
                         // 遍历所有图片，为每张图片创建一个独立的 CarouselImage 对象
                         const newImages = imageUrls.map((url, index) => ({
                             url: url,
-                            // 标题和链接指向文章本身
                             title: frontmatter.title, 
                             link: link, 
-                            // alt 文本可以包含图片序号
                             alt: `${frontmatter.title} (图 ${index + 1})`, 
                         }));
                         
-                        // 将这个文章的所有图片添加到总结果中
                         results = results.concat(newImages);
 
                     } else {
@@ -143,8 +156,9 @@ async function crawlDirectory(dir: string): Promise<CarouselImage[]> {
             }
         }
     } catch (e) {
-        // 捕获文件遍历中的具体错误，确保进程不崩溃
+        // 捕获顶层文件遍历中的具体错误 (如 ROOT_DIRECTORY 不存在)
         console.error(`❌ 文件系统操作失败或目录不可读: ${dir}`, e);
+        // 如果出错，确保返回空数组，而不是 undefined 或 null
     }
 
     return results;
@@ -155,10 +169,11 @@ async function crawlDirectory(dir: string): Promise<CarouselImage[]> {
  */
 export async function GET() {
   try {
-    // crawlDirectory 现在返回一个扁平化的图片列表
     const carouselData = await crawlDirectory(ROOT_DIRECTORY);
     
     console.log(`✅ [API/Carousel] 成功抓取 ${carouselData.length} 条轮播数据.`);
+    
+    // 确保返回的数据是可序列化的数组
     return NextResponse.json(carouselData);
 
   } catch (error) {
