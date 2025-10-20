@@ -1,0 +1,24 @@
+[build]
+  command = "yarn build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "18"
+  NODE_ENV = "production"
+  NEXT_TELEMETRY_DISABLED = "1"
+  # 针对 yarn 的优化
+  YARN_VERSION = "1.22.19"
+  YARN_FLAGS = "--ignore-engines"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["@mantine/core", "@mantine/carousel", "embla-carousel"]
+  
+# 重定向规则，确保 SPA 行为
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
