@@ -40,8 +40,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             key="nextra-layout"
             banner={
               <Banner key="banner" storageKey={`release-notes-${pack.version}`}>
-                ✨ v{pack.version} Released -{' '}
-                <a href="/docs/release-notes">看更新笔记</a>
+                ✨ 点击访问-{' '}
+                <a href="https://sorayt.com">薇薇日常</a>
               </Banner>
             }
             navbar={<MantineNavBar key="navbar" />}
