@@ -10,41 +10,60 @@ interface CarouselImage {
   link: string;
 }
 
-// 静态数据路径：在 Vercel 运行时，public 目录会被映射为根目录 '/'
-const DATA_FILE_PATH = path.join(process.cwd(), 'public', 'carousel_data.json'); 
-// Fallback path for Vercel Environment (where /public is not needed in path.join)
-const FALLBACK_DATA_FILE_PATH = path.join(process.cwd(), 'carousel_data.json'); 
+// 路径定义
+// 1. 标准路径：适用于本地开发/大部分服务器环境
+const STANDARD_PATH = path.join(process.cwd(), 'public', 'carousel_data.json'); 
+// 2. Vercel 回退路径：public 文件夹内容有时直接位于函数根目录
+const VERCEL_FALLBACK_PATH = path.join(process.cwd(), 'carousel_data.json'); 
+
+// 保持动态，确保在运行时执行 I/O 操作
+export const dynamic = 'force-dynamic'; 
 
 // --- Next.js App Router GET 请求处理函数 ---
 export async function GET(request: NextRequest) {
-  let carouselData: CarouselImage[] = [];
+  let dataContent: string;
+  let triedPaths: string = ''; // 用于错误日志记录
   
   try {
-    let dataContent: string;
-    
-    // 1. 尝试读取 DATA_FILE_PATH
+    // 1. 尝试读取标准路径
     try {
-      dataContent = await fs.readFile(DATA_FILE_PATH, 'utf8');
-    } catch (e) {
-      // 2. 如果失败，尝试读取 FALLBACK_DATA_FILE_PATH (Vercel有时直接将public文件放在根)
-      dataContent = await fs.readFile(FALLBACK_DATA_FILE_PATH, 'utf8');
+      dataContent = await fs.readFile(STANDARD_PATH, 'utf8');
+      triedPaths = `SUCCESS: ${STANDARD_PATH}`;
+    } catch (standardError) {
+      // 2. 如果标准路径失败，尝试回退路径
+      try {
+        dataContent = await fs.readFile(VERCEL_FALLBACK_PATH, 'utf8');
+        triedPaths = `SUCCESS: ${VERCEL_FALLBACK_PATH}`;
+      } catch (fallbackError) {
+        // 两次尝试都失败，抛出错误以进入外层 catch 块
+        triedPaths = `FAILED: ${STANDARD_PATH} and ${VERCEL_FALLBACK_PATH}`;
+        
+        // 提取主要错误信息，避免日志过长
+        const stdErrMsg = (standardError as Error).message.split(',')[0];
+        const fallErrMsg = (fallbackError as Error).message.split(',')[0];
+        
+        throw new Error(
+            `File not found after two tries. (Standard: ${stdErrMsg}, Fallback: ${fallErrMsg})`
+        );
+      }
     }
     
     // 3. 解析 JSON 数据
-    carouselData = JSON.parse(dataContent) as CarouselImage[];
+    // 注意：dataContent 在成功读取后必然有值
+    const carouselData = JSON.parse(dataContent) as CarouselImage[];
     
-    // Console log is now safe and fast
-    // console.log(`✅ [API/Carousel] Successfully loaded ${carouselData.length} carousel items from static file.`);
-    
+    // console.log(`[API/Carousel] Data loaded successfully from: ${triedPaths}`);
     return NextResponse.json(carouselData);
 
   } catch (error) {
-    console.error(`❌ [API/Carousel] Failed to read or parse static carousel data file (${DATA_FILE_PATH}):`, error);
+    // 捕获读取文件失败或 JSON 解析失败的错误
+    console.error(`❌ [API/Carousel] Fatal Error loading static data. Tried Paths: ${triedPaths}`, error);
     
-    // 如果无法加载预生成的数据文件，返回一个 500 响应
+    // 返回一个 500 响应，详细信息有助于客户端调试
     return new NextResponse(JSON.stringify({ 
-      error: 'Failed to load carousel data. Static file not found or invalid JSON.',
-      detail: (error as Error).message
+      status: 500,
+      error: 'Failed to load carousel data. Static file error on server.',
+      detail: (error instanceof Error) ? error.message : 'Unknown error during file operation.'
     }), {
       status: 500,
       headers: {
@@ -53,6 +72,3 @@ export async function GET(request: NextRequest) {
     });
   }
 }
-
-// 保持动态，但现在它会很快
-export const dynamic = 'force-dynamic'; 
