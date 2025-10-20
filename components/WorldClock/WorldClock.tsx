@@ -1,3 +1,5 @@
+'use client'
+
 import { Clock } from '@gfazioli/mantine-clock';
 import { Group, Stack, Text } from '@mantine/core';
 

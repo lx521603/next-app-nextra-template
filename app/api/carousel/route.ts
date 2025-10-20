@@ -4,6 +4,7 @@ import matter from 'gray-matter';
 import { NextResponse, type NextRequest } from 'next/server';
 
 // --- 接口定义 ---
+// 注意：CarouselImage 现在代表的是单个轮播项
 interface CarouselImage {
   url: string;
   alt: string;
@@ -13,24 +14,59 @@ interface CarouselImage {
 
 interface PostFrontmatter {
   title: string;
+  // 新增 gallery 字段，支持字符串数组或单个字符串（Nextra/Markdown 格式可能解析为两者之一）
+  gallery?: string[] | string;
+  
+  // 保持旧的单图字段作为回退
   cover?: string;      
   img?: string;        
   image?: string;       
   coverImage?: string; 
+  
   show?: boolean;         
   showInCarousel?: boolean; 
   [key: string]: any; 
 }
 
 // --- 辅助函数 ---
-function getImageUrl(frontmatter: PostFrontmatter): string | null {
+
+/**
+ * 核心修改：根据 Frontmatter 提取所有用于照片墙的图片 URL 列表。
+ * 优先级: gallery (数组) > gallery (单张) > img/image/cover (单张)
+ * @param frontmatter 文章的 Frontmatter 数据
+ * @returns 包含所有轮播图片 URL 的数组
+ */
+function getGalleryUrls(frontmatter: PostFrontmatter): string[] {
+    const urls: string[] = [];
+
+    // 1. 优先检查 gallery 字段
+    if (frontmatter.gallery) {
+        if (Array.isArray(frontmatter.gallery)) {
+            // 如果是数组，直接返回所有有效 URL
+            return frontmatter.gallery.filter(url => typeof url === 'string' && url.length > 0);
+        } else if (typeof frontmatter.gallery === 'string') {
+            // 如果是单个字符串，作为单个图片返回
+            urls.push(frontmatter.gallery);
+            return urls;
+        }
+    }
+    
+    // 2. 如果 gallery 不存在或无效，回退到旧的单图字段
     // 优先级: cover > img > image > coverImage
-    if (frontmatter.cover && typeof frontmatter.cover === 'string') return frontmatter.cover;
-    if (frontmatter.img && typeof frontmatter.img === 'string') return frontmatter.img;
-    if (frontmatter.image && typeof frontmatter.image === 'string') return frontmatter.image;
-    if (frontmatter.coverImage && typeof frontmatter.coverImage === 'string') return frontmatter.coverImage;
-    return null;
+    if (frontmatter.cover && typeof frontmatter.cover === 'string') {
+        urls.push(frontmatter.cover);
+    } else if (frontmatter.img && typeof frontmatter.img === 'string') {
+        urls.push(frontmatter.img);
+    } else if (frontmatter.image && typeof frontmatter.image === 'string') {
+        urls.push(frontmatter.image);
+    } else if (frontmatter.coverImage && typeof frontmatter.coverImage === 'string') {
+        urls.push(frontmatter.coverImage);
+    }
+
+    // 此时 urls 数组最多包含一个元素
+    return urls;
 }
+
 
 function shouldShowInCarousel(frontmatter: PostFrontmatter): boolean {
     // 优先级: show > showInCarousel
@@ -76,24 +112,30 @@ async function crawlDirectory(dir: string): Promise<CarouselImage[]> {
                 const frontmatter = data as PostFrontmatter;
 
                 if (shouldShowInCarousel(frontmatter)) {
-                    const imageUrl = getImageUrl(frontmatter);
+                    
+                    // 核心修改：获取所有图片 URL
+                    const imageUrls = getGalleryUrls(frontmatter);
 
-                    if (imageUrl) {
+                    if (imageUrls.length > 0) {
                         // 移除文件后缀 (.mdx/.md)
                         let slug = relativePath.replace(/\.(mdx|md)$/, '');
                         
-                        // ❌ 以前这里有移除数字的逻辑，现在确保它被删除，保留完整路径
-                        // slug = slug.replace(/\/\d+$/, ''); 
-                        
-                        // ✅ 修复：加上 /carousel 前缀。例如：/carousel/AvoidPitfalls/444
+                        // 统一链接前缀
                         const link = `/carousel/${slug}`; 
+
+                        // 遍历所有图片，为每张图片创建一个独立的 CarouselImage 对象
+                        const newImages = imageUrls.map((url, index) => ({
+                            url: url,
+                            // 标题和链接指向文章本身
+                            title: frontmatter.title, 
+                            link: link, 
+                            // alt 文本可以包含图片序号
+                            alt: `${frontmatter.title} (图 ${index + 1})`, 
+                        }));
                         
-                        results.push({
-                            url: imageUrl,
-                            alt: frontmatter.title, 
-                            title: frontmatter.title,
-                            link: link, // 正确的链接
-                        });
+                        // 将这个文章的所有图片添加到总结果中
+                        results = results.concat(newImages);
+
                     } else {
                         console.warn(`⚠️ 文章 "${frontmatter.title}" (${relativePath}) 标记了轮播，但缺少图片 URL。`);
                     }
@@ -113,6 +155,7 @@ async function crawlDirectory(dir: string): Promise<CarouselImage[]> {
  */
 export async function GET() {
   try {
+    // crawlDirectory 现在返回一个扁平化的图片列表
     const carouselData = await crawlDirectory(ROOT_DIRECTORY);
     
     console.log(`✅ [API/Carousel] 成功抓取 ${carouselData.length} 条轮播数据.`);
