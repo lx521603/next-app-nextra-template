@@ -4,7 +4,7 @@ import '@mantine/core/styles.layer.css';
 import '@mantine/core/styles.css';
 import '@mantine/carousel/styles.css';
 import '@gfazioli/mantine-clock/styles.css';
-
+import './styles/custom-images.css';
 import { Layout } from 'nextra-theme-docs';
 import { Banner, Head } from 'nextra/components';
 import { getPageMap } from 'nextra/page-map';
@@ -57,3 +57,4 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     </html>
   );
 }
+

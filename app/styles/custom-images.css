@@ -1,0 +1,20 @@
+/* styles/custom-images.css */
+.nextra-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 16px 0 !important;
+}
+
+.nextra-content img + img {
+  margin-top: 24px !important;
+}
+/* 直接针对所有图片设置间距 */
+img {
+  margin: 16px 0 !important;
+}
+
+/* 连续图片之间的额外间距 */
+img + img {
+  margin-top: 24px !important;
+}
