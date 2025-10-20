@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build && yarn build:pagefind",
+    "prebuild": "node scripts/generate_carousel_data.js",
+    "build": "npm run prebuild && next build && yarn build:pagefind",
     "build:pagefind": "pagefind --site .next/server/app --output-path public/_pagefind",
     "analyze": "ANALYZE=true next build",
     "start": "next start",

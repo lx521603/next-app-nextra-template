@@ -41,8 +41,8 @@ export function Welcome() {
 
       <Text c="dimmed" ta="center" size="xl" maw={580} mx="auto" mt="sm">
         在这个空间，我记录我的发现与灵感，也希望分享给同样热爱探索、喜欢尝鲜的朋友。每一次点击、每一次出发，都是一场新的探险。{' '}
-        <Anchor href="https://mantine.dev/guides/next/">this guide</Anchor>. To get started edit{' '}
-        <Code fz="xl">page.tsx</Code> file.
+        {' '}
+        
       </Text>
 
       <Center>
