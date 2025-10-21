@@ -1,11 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { TextAnimate } from '@gfazioli/mantine-text-animate';
 import { IconBrandGithub, IconExternalLink, IconMessageCircle } from '@tabler/icons-react';
 import { Anchor, Button, Center, Code, Paper, Text, Title, Modal } from '@mantine/core';
-// import pack from '../../package.json';
-// import { ProductHunt } from '../ProductHunt/ProductHunt';
 import ContactForm from '@/components/ContactForm/ContactForm';
 import classes from './Welcome.module.css';
 
@@ -14,35 +11,21 @@ export function Welcome() {
 
   return (
     <>
-      {/* 屏蔽 ProductHunt 部分 */}
-      {/*
-      <Center my={64}>
-        <ProductHunt />
-      </Center>
-      */}
-      
-      <Title maw="90vw" mx="auto" className={classes.title} ta="center">
-        欢迎来到我的基地
-        <TextAnimate
-          animate="in"
-          by="character"
-          inherit
-          variant="gradient"
-          component="span"
-          segmentDelay={0.2}
-          duration={2}
-          animation="scale"
-          animateProps={{ scaleAmount: 3 }}
+      <Title maw="90vw" mx="auto" className={classes.title} ta="center" size="2rem" fw={700}>
+        欢迎来到我的基地{' '}
+        <Text 
+          component="span" 
+          variant="gradient" 
           gradient={{ from: 'pink', to: 'yellow' }}
+          inherit
+          style={{ fontSize: 'inherit', fontWeight: 'inherit' }}
         >
           Asura
-        </TextAnimate>
+        </Text>
       </Title>
 
-      <Text c="dimmed" ta="center" size="xl" maw={580} mx="auto" mt="sm">
-        在这个空间，我记录我的发现与灵感，也希望分享给同样热爱探索、喜欢尝鲜的朋友。每一次点击、每一次出发，都是一场新的探险。{' '}
-        {' '}
-        
+      <Text c="dimmed" ta="center" size="xl" maw={580} mx="auto" mt="sm" fz="1.25rem">
+        在这个空间，我记录我的发现与灵感，也希望分享给同样热爱探索、喜欢尝鲜的朋友。每一次点击、每一次出发，都是一场新的探险。
       </Text>
 
       <Center>
@@ -69,27 +52,6 @@ export function Welcome() {
       >
         <ContactForm />
       </Modal>
-
-      {/*
-      <Paper shadow="xl" p={8} mih={300} my={32} bg="dark.9" mx="auto" radius={8}>
-        <TextAnimate.Typewriter
-          inherit
-          fz={11}
-          c="green.5"
-          ff="monospace"
-          multiline
-          delay={100}
-          loop={false}
-          value={[
-            'Dependencies :',
-            ...Object.keys(pack.dependencies).map(
-              (key: string) =>
-                `${key} : ${pack.dependencies[key as keyof typeof pack.dependencies].toString()}`
-            ),
-          ]}
-        />
-      </Paper>
-      */}
     </>
   );
 }
