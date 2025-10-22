@@ -17,9 +17,7 @@ export default withNextra(
   withBundleAnalyzer({
     reactStrictMode: false,
     cleanDistDir: true,
-    eslint: {
-      ignoreDuringBuilds: true,
-    },
+    // 移除 eslint 配置，因为它不再在 next.config.mjs 中支持
     experimental: {
       optimizePackageImports: ['@mantine/core', '@mantine/hooks'],
     },
