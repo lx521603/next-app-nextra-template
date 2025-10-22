@@ -1,72 +1,79 @@
+---
+title: 介绍
+nav:
+  title: 介绍
+  order: 1
+tags:
+  - next.js
+  - Mantine
+  - Nextra
+  - 主题
+  - template
+description: Mantine Next.js + Nextra template主题增强
+---
+# Mantine Next.js + Nextra template主题增强
+
+## 关于本网站
+本网站fork自
+https://github.com/gfazioli/next-app-nextra-template
+居于Mantine Next.js + Nextra template，主题。
+
+## 增加页面
+增加了about页面
+
+## 增加功能
+1.增加了联系功能，点击弹出窗口，利用自己的邮箱发件给自己。
+
+2.增加了标签功能
+
+3.增加主页的旋转木马功能，并自动滚动
+
+4.增加了世界时钟
+
 import { Button } from '@mantine/core';
 import { Callout, FileTree, Steps } from 'nextra/components'
 import { FileTreeLabel } from '@/components/FileTreeLabel'
 
-# Introduction
+# 介绍
 
-Hello, world!
-Welcome to the Nextra + Mantine template.
+你好，世界！欢迎使用 Nextra + Mantine 模板。
 
-This is a starter template for [Next.js](https://nextjs.org/) app router + [Mantine](https://mantine.dev/) + [Nextra](https://nextra.site/) documentation site.
+这是Next.js [Next.js](https://nextjs.org/) 应用路由器 + [Mantine](https://mantine.dev/) + [Nextra](https://nextra.site/) 文档站点的入门模板。
 
-## Features
+## 特征
 
-This template comes with the following features:
+该模板具有以下特点:
 
 - [PostCSS](https://postcss.org/) with [mantine-postcss-preset](https://mantine.dev/styles/postcss-preset)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Storybook](https://storybook.js.org/)
-- [Jest](https://jestjs.io/) setup with [React Testing Library](https://testing-library.com/docs/react-testing-library/intro)
-- ESLint setup with [eslint-config-mantine](https://github.com/mantinedev/eslint-config-mantine)
-- Provides API example in `/api/version`
+- 使用 [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) 设置 [Jest](https://jestjs.io/) 
+- 使用 [eslint-config-mantine](https://github.com/mantinedev/eslint-config-mantine) 设置 ESLint
+- 在 `/api/version` 提供 api 实例
 
-## Nextra Features
+## Nextra 功能
 
-- [Nextra](https://nextra.site/) documentation site with Mantine theme
-- Sync Dark mode between documentation and application (Mantine/Nextra)
-- Customizable components in `components` folder
-- Provides new Navigation and Footer components for Nextra documentation site
+- [Nextra](https://nextra.site/) 采用 Mantine 主题的文档站点
+- 在文档和应用程序之间同步暗模式 (Mantine/Nextra)
+- 文件夹中的可定制组件 `components` 文件夹
+- 为 Nextra 文档站点提供新的导航和页脚组件
 
-## Folder structure
+## 文件夹结构
 
-You will find a lot of predefined folders and files in the project. Here is a short description of the most important ones:
+您将在项目中发现许多预定义的文件夹和文件。以下是其中最重要的一些的简要描述：
 
 <FileTree>
   <FileTree.Folder name="app" defaultOpen>
-      <FileTree.Folder name={<FileTreeLabel type="folder" name="api">Useful API</FileTreeLabel>} defaultOpen />
-          <FileTree.File name={<FileTreeLabel type="file" name="layout.tsx">Main layout</FileTreeLabel>} />
-      <FileTree.File name={<FileTreeLabel type="file" name="page.tsx">Homepage</FileTreeLabel>} />
+      <FileTree.Folder name={<FileTreeLabel type="folder" name="api">有用的 API</FileTreeLabel>} defaultOpen />
+          <FileTree.File name={<FileTreeLabel type="file" name="layout.tsx">主 layout</FileTreeLabel>} />
+      <FileTree.File name={<FileTreeLabel type="file" name="page.tsx">主页</FileTreeLabel>} />
   </FileTree.Folder>
-  <FileTree.Folder name={<FileTreeLabel type="folder" name="components">Useful components</FileTreeLabel>} defaultOpen />
+  <FileTree.Folder name={<FileTreeLabel type="folder" name="components">有用的组件</FileTreeLabel>} defaultOpen />
   <FileTree.Folder name="config" defaultOpen>
-    <FileTree.File name={<FileTreeLabel type="file" name="index.ts">Most of the config are here!</FileTreeLabel>} />
+    <FileTree.File name={<FileTreeLabel type="file" name="index.ts">大部分设置在这里!</FileTreeLabel>} />
   </FileTree.Folder>
-  <FileTree.Folder name={<FileTreeLabel type="folder" name="content">MDX docs</FileTreeLabel>} defaultOpen />
+  <FileTree.Folder name={<FileTreeLabel type="folder" name="content">MDX 文档</FileTreeLabel>} defaultOpen />
 </FileTree>
 
-You can start by changing the main configuration in `config/index.ts` file. This file contains the most important configuration for the project.
+您可以从更改文件中的主要配置开始config/index.ts。此文件包含项目最重要的配置。
 
-
-
-## npm scripts
-
-### Build and dev scripts
-
-- `dev` – start dev server
-- `build` – bundle application for production
-- `analyze` – analyzes application bundle with [@next/bundle-analyzer](https://www.npmjs.com/package/@next/bundle-analyzer)
-
-### Testing scripts
-
-- `typecheck` – checks TypeScript types
-- `lint` – runs ESLint
-- `prettier:check` – checks files with Prettier
-- `jest` – runs jest tests
-- `jest:watch` – starts jest watch
-- `test` – runs `jest`, `prettier:check`, `lint` and `typecheck` scripts
-
-### Other scripts
-
-- `storybook` – starts storybook dev server
-- `storybook:build` – build production storybook bundle to `storybook-static`
-- `prettier:write` – formats all files with Prettier

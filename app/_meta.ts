@@ -12,7 +12,7 @@ export default {
     items: {
       blog: {
         title: '博客',
-        href: 'https://undolog.com/',
+        href: '/docs',
       },
       medium: {
         title: 'Telegram',

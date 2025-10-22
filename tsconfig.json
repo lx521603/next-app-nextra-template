@@ -39,7 +39,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-, "lib/carousel-utils.ts"  ],
+, "lib/carousel-utils.ts", "components/Location.tsx"  ],
   "exclude": [
     "node_modules"
   ]
