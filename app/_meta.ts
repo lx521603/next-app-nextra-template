@@ -12,7 +12,7 @@ export default {
     items: {
       blog: {
         title: '博客',
-        href: '/docs',
+        href: 'https://next.yt',
       },
       medium: {
         title: 'Telegram',
