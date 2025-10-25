@@ -42,7 +42,7 @@
     "lib/carousel-utils.ts",
     "components/Location.tsx",
     ".next/dev/types/**/*.ts"
-  ],
+, "app/carousel/[...slug]/page.tsx.bak"  ],
   "exclude": [
     "node_modules"
   ]

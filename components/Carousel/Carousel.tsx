@@ -9,7 +9,7 @@ interface CarouselImage {
   url: string;
   alt: string;
   title: string;
-  link: string;
+  link: string; // This link is expected to be /carousel/*
 }
 
 export function HomeCarousel() {
@@ -54,13 +54,28 @@ export function HomeCarousel() {
     }
   }, [images.length, startAutoPlay]);
 
-  // 点击处理函数
+  // VITAL CHANGE: Modified Click Handler to transform /carousel/* to /docs/*
   const handleSlideClick = useCallback((link: string) => {
-    window.location.href = link;
+    let targetLink = link;
+
+    // Check if the link starts with the old path pattern
+    if (link.startsWith('/carousel/')) {
+      // Replace '/carousel/' with '/docs/'
+      targetLink = link.replace('/carousel/', '/docs/');
+    }
+    
+    // Fallback images use /carousel/test/*, so this transformation handles those too.
+    // If the link is already /docs/* (e.g., if API was updated), it remains unchanged.
+    
+    // Perform the client-side navigation to the correct /docs/ path
+    window.location.href = targetLink;
   }, []);
+  // END OF VITAL CHANGE
 
   // 备用图片数据
   function getFallbackImages(): CarouselImage[] {
+    // Note: Fallback links are kept as /carousel/test/X.
+    // The handleSlideClick function above ensures they are converted to /docs/test/X on click.
     return [
       { url: 'https://picsum.photos/400/600?random=a', alt: '测试竖图1', title: '测试竖图1', link: '/carousel/test/1' },
       { url: 'https://picsum.photos/800/400?random=b', alt: '测试横图1', title: '测试横图1', link: '/carousel/test/2' },
