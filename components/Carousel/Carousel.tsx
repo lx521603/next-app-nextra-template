@@ -3,7 +3,6 @@
 import { Carousel, CarouselSlide } from '@mantine/carousel';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import '@mantine/carousel/styles.css';
-import Link from 'next/link';
 import { Box } from '@mantine/core';
 
 interface CarouselImage {
@@ -54,6 +53,11 @@ export function HomeCarousel() {
       startAutoPlay();
     }
   }, [images.length, startAutoPlay]);
+
+  // 点击处理函数
+  const handleSlideClick = useCallback((link: string) => {
+    window.location.href = link;
+  }, []);
 
   // 备用图片数据
   function getFallbackImages(): CarouselImage[] {
@@ -156,8 +160,8 @@ export function HomeCarousel() {
       >
         {images.map((image, index) => (
           <CarouselSlide key={`${image.url}-${index}`}>
-            <Link 
-              href={image.link} 
+            <div 
+              onClick={() => handleSlideClick(image.link)}
               style={{ 
                 display: 'block', 
                 textDecoration: 'none', 
@@ -193,7 +197,7 @@ export function HomeCarousel() {
                   }}
                 />
               </div>
-            </Link>
+            </div>
           </CarouselSlide>
         ))}
       </Carousel>
