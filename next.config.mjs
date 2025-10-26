@@ -6,11 +6,9 @@ const withBundleAnalyzer = bundleAnalyzer({
 });
 
 const withNextra = nextra({
-  theme: 'nextra-theme-docs',
-  themeConfig: './theme.config.tsx',
   latex: true,
   search: {
-    codeblocks: false,
+    codeblocks: false
   },
   contentDirBasePath: '/docs',
 });
