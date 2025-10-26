@@ -11,17 +11,13 @@ const withNextra = nextra({
     codeblocks: false
   },
   contentDirBasePath: '/docs',
-  // 添加 MDX 组件映射
-  mdxOptions: {
-    providerImportSource: '@mdx-js/react',
-  },
+  // 移除 mdxOptions，Nextra 不支持
 })
 
 export default withNextra(
   withBundleAnalyzer({
     reactStrictMode: false,
     cleanDistDir: true,
-    // 移除 eslint 配置，因为它不再在 next.config.mjs 中支持
     experimental: {
       optimizePackageImports: ['@mantine/core', '@mantine/hooks'],
     },
