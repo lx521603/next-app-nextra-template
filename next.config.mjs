@@ -11,6 +11,10 @@ const withNextra = nextra({
     codeblocks: false
   },
   contentDirBasePath: '/docs',
+  // 添加 MDX 组件映射
+  mdxOptions: {
+    providerImportSource: '@mdx-js/react',
+  },
 })
 
 export default withNextra(
