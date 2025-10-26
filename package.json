@@ -43,7 +43,6 @@
     "nextra": "4.6.0",
     "nextra-theme-docs": "4.6.0",
     "nodemailer": "^7.0.9",
-    "next-mdx-rs": "^0.2.0",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "recharts": "^3.3.0",
