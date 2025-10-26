@@ -14,17 +14,8 @@ import config from '@/config';
 import pack from '../package.json';
 import { theme } from '../theme';
 import './global.css';
-// 添加 MDX 相关导入
-import { MDXProvider } from '@mdx-js/react';
-import Location from '@/components/Location';
 
 export const metadata = config.metadata;
-
-// 定义全局 MDX 组件
-const mdxComponents = {
-  Location: Location,
-  // 可以在这里添加其他全局组件
-};
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const pageMap = await getPageMap();
@@ -45,25 +36,22 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </Head>
       <body>
         <MantineProvider theme={theme} defaultColorScheme={head.mantine.defaultColorScheme}>
-          {/* 添加 MDXProvider 包装 */}
-          <MDXProvider components={mdxComponents}>
-            <Layout
-              key="nextra-layout"
-              banner={
-                <Banner key="banner" storageKey={`release-notes-${pack.version}`}>
-                  ✨ 点击访问-{' '}
-                  <a href="https://sorayt.com">薇薇日常</a>
-                </Banner>
-              }
-              navbar={<MantineNavBar key="navbar" />}
-              pageMap={pageMap}
-              docsRepositoryBase={nextraLayout.docsRepositoryBase}
-              footer={<MantineFooter key="footer" />}
-              sidebar={nextraLayout.sidebar}
-            >
-              {children}
-            </Layout>
-          </MDXProvider>
+          <Layout
+            key="nextra-layout"
+            banner={
+              <Banner key="banner" storageKey={`release-notes-${pack.version}`}>
+                ✨ 点击访问-{' '}
+                <a href="https://sorayt.com">薇薇日常</a>
+              </Banner>
+            }
+            navbar={<MantineNavBar key="navbar" />}
+            pageMap={pageMap}
+            docsRepositoryBase={nextraLayout.docsRepositoryBase}
+            footer={<MantineFooter key="footer" />}
+            sidebar={nextraLayout.sidebar}
+          >
+            {children}
+          </Layout>
         </MantineProvider>
       </body>
     </html>
