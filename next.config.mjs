@@ -13,13 +13,14 @@ const withNextra = nextra({
 
 export default withNextra(
   withBundleAnalyzer({
-    output: 'export',
-    images: { unoptimized: true },
+    output: 'export',                    // 纯静态导出
+    images: { unoptimized: true },       // 静态必需
     cleanDistDir: true,
     eslint: { ignoreDuringBuilds: true },
     reactStrictMode: false,
+
     experimental: {
-      ppr: true,
+      ppr: true,                         // 部分预渲染
       optimizePackageImports: [
         '@mantine/core',
         '@mantine/hooks',
