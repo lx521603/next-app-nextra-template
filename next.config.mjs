@@ -19,8 +19,10 @@ export default withNextra(
     eslint: { ignoreDuringBuilds: true },
     reactStrictMode: false,
 
+    // Next.js 16 新的配置方式
+    cacheComponents: true,               // 替代 experimental.ppr，启用组件缓存和部分预渲染
+    
     experimental: {
-      ppr: true,                         // 部分预渲染
       optimizePackageImports: [
         '@mantine/core',
         '@mantine/hooks',
