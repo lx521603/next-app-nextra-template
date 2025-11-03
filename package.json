@@ -76,5 +76,5 @@
     "test": "npm run prettier:check && npm run lint && npm run typecheck && npm run jest",
     "typecheck": "tsc --noEmit"
   },
-  "version": "2.3.3"
+  "version": "3.0.0"
 }
