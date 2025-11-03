@@ -1,7 +1,7 @@
 # Mantine Next.js + Nextra template
 
+<img width="1536" height="1786" alt="SCR-20251103-jmsr" src="https://github.com/user-attachments/assets/11dd92b6-66d2-4ced-af19-62b5a30a9099" />
 
-<img width="1536" alt="image" src="https://github.com/user-attachments/assets/eac2e76d-0c63-4429-bb93-b75476e55216" />
 
 
 This is a template for [Next.js](https://nextjs.org/) app router + [Mantine](https://mantine.dev/) + [Nextra](https://nextra.site/) documentation site.
