@@ -8,7 +8,6 @@ import {
   Button,
   Group,
   Loader,
-  Paper,
   Skeleton,
   Stack,
   Text,
@@ -71,41 +70,6 @@ export function ReleaseNotes() {
           </Timeline.Item>
         ))}
       </Timeline>
-      <Button
-        color="orange"
-        component="a"
-        href={config.releaseNotes.url}
-        variant="gradient"
-        size="sm"
-        gradient={{ from: 'dark.9', to: 'dark.8', deg: 45 }}
-        leftSection={<IconBrandGithub size={18} />}
-        radius="xl"
-      >
-        View full changelog on GitHub
-      </Button>
-    </Stack>
-  );
-
-  return (
-    <Stack mt={24}>
-      {data.map((release: Release) => (
-        <Paper
-          id={release.tag_name}
-          key={release.id}
-          withBorder
-          p={24}
-          radius={12}
-          shadow="sm"
-          className="x:tracking-tight x:target:animate-[fade-in_1.5s]"
-        >
-          <Group justify="space-between">
-            <Badge size="xl">{release.tag_name}</Badge>
-            <Text>{release.created_at}</Text>
-          </Group>
-
-          <MDXRemote compiledSource={release.body} components={components} />
-        </Paper>
-      ))}
       <Button
         color="orange"
         component="a"
