@@ -4,7 +4,7 @@
 
 > [!NOTE]
 >
-> ❤️ If you find this template useful, help me keep it up to date in the future by providing your contribution as a [Sponsor](https://github.com/sponsors/gfazioli/card)
+> ❤️ If you find this template useful, help me keep it up to date in the future by providing your contribution as a [Sponsor](https://github.com/sponsors/gfazioli?o=esc)
 >  
 
 This is a template for [Next.js](https://nextjs.org/) app router + [Mantine](https://mantine.dev/) + [Nextra](https://nextra.site/) documentation site.
