@@ -1,8 +1,12 @@
 # Mantine Next.js + Nextra template
 
+<img width="1536" height="1786" alt="SCR-20251103-jmsr" src="https://github.com/user-attachments/assets/11dd92b6-66d2-4ced-af19-62b5a30a9099" />
 
-<img width="1536" alt="image" src="https://github.com/user-attachments/assets/eac2e76d-0c63-4429-bb93-b75476e55216" />
+<div align="center">
 
+[<kbd> <br/> ❤️ If this component has been useful to you or your team, please consider becoming a sponsor <br/> </kbd>](https://github.com/sponsors/gfazioli?o=esc)
+
+</div>
 
 This is a template for [Next.js](https://nextjs.org/) app router + [Mantine](https://mantine.dev/) + [Nextra](https://nextra.site/) documentation site.
 
@@ -53,6 +57,28 @@ This template comes with the following features:
 - `storybook` – starts storybook dev server
 - `storybook:build` – build production storybook bundle to `storybook-static`
 - `prettier:write` – formats all files with Prettier
+
+## Sponsor
+
+<div align="center">
+
+[<kbd> <br/> ❤️ If this component has been useful to you or your team, please consider becoming a sponsor <br/> </kbd>](https://github.com/sponsors/gfazioli?o=esc)
+
+</div>
+
+Your support helps me:
+
+- Keep the project actively maintained with timely bug fixes and security updates 	
+- Add new features, improve performance, and refine the developer experience 	
+- Expand test coverage and documentation for smoother adoption 	
+- Ensure long‑term sustainability without relying on ad hoc free time 	
+- Prioritize community requests and roadmap items that matter most
+
+Open source thrives when those who benefit can give back—even a small monthly contribution makes a real difference. Sponsorships help cover maintenance time, infrastructure, and the countless invisible tasks that keep a project healthy.
+
+Your help truly matters.
+
+💚 [Become a sponsor](https://github.com/sponsors/gfazioli?o=esc) today and help me keep this project reliable, up‑to‑date, and growing for everyone.
 
 <div align="center">
   
