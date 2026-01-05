@@ -74,7 +74,7 @@ export function getAllPosts(): Post[] {
           }
         }
         
-        // 处理 gallery - 关键修复！
+        // 处理 gallery
         let gallery: string[] = [];
         if (data.gallery) {
           console.log(`🖼️  发现 gallery 在 ${slug}`);
@@ -83,19 +83,15 @@ export function getAllPosts(): Post[] {
             gallery = data.gallery.filter(img => img && typeof img === 'string').map(img => img.trim());
             console.log(`   ✅ gallery 是数组，有 ${gallery.length} 张图片`);
           } else if (typeof data.gallery === 'string') {
-            // YAML 格式可能是多行字符串
             const galleryStr = data.gallery;
             if (galleryStr.includes('- ')) {
-              // YAML 列表格式: "- url1\n- url2"
               gallery = galleryStr.split('\n')
                 .map(line => line.trim())
                 .filter(line => line.startsWith('- '))
                 .map(line => line.substring(2).trim());
             } else if (galleryStr.includes(',')) {
-              // 逗号分隔
               gallery = galleryStr.split(',').map(img => img.trim());
             } else {
-              // 单张图片
               gallery = [galleryStr.trim()];
             }
             console.log(`   ✅ gallery 是字符串，解析出 ${gallery.length} 张图片`);
@@ -120,7 +116,9 @@ export function getAllPosts(): Post[] {
         posts.push(post);
         
       } catch (error) {
-        console.error(`❌ 处理文件失败 ${relativePath}:`, error.message);
+        // TypeScript 修复：安全地获取错误信息
+        const errorMessage = error instanceof Error ? error.message : '未知错误';
+        console.error(`❌ 处理文件失败 ${relativePath}:`, errorMessage);
       }
     }
     
@@ -129,7 +127,9 @@ export function getAllPosts(): Post[] {
     return posts;
     
   } catch (error) {
-    console.error('❌ 扫描目录失败:', error);
+    // TypeScript 修复：安全地获取错误信息
+    const errorMessage = error instanceof Error ? error.message : '扫描目录失败';
+    console.error('❌ 扫描目录失败:', errorMessage);
     return [];
   }
 }
