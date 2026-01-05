@@ -1,44 +1,14 @@
 [
   {
     "url": "https://img.sorayt.cn/f/6MC8/DSC00730.webp",
-    "title": "保山青龙街",
-    "link": "/carousel/shot/bs/bsqlj",
-    "alt": "保山青龙街 (Image 1)"
+    "alt": "你的新文章标题",
+    "title": "你的新文章标题",
+    "link": "/docs/你的文章路径"
   },
   {
     "url": "https://img.sorayt.cn/f/v0h6/DSC00763.BnP4sFeo.jpg",
-    "title": "保山青龙街",
-    "link": "/carousel/shot/bs/bsqlj",
-    "alt": "保山青龙街 (Image 2)"
-  },
-  {
-    "url": "https://img.sorayt.cn/f/1XtR/DSC00604.webp",
-    "title": "微微保山三馆广场室外直播",
-    "link": "/carousel/shot/zb/bsswzb",
-    "alt": "微微保山三馆广场室外直播 (Image 1)"
-  },
-  {
-    "url": "https://img.sorayt.cn/f/Yjsj/vv.jpg",
-    "title": "微微直播",
-    "link": "/carousel/shot/zb/zb1",
-    "alt": "微微直播 (Image 1)"
-  },
-  {
-    "url": "https://img.sorayt.cn/f/lgi6/vv1.jpg",
-    "title": "微微直播",
-    "link": "/carousel/shot/zb/zb1",
-    "alt": "微微直播 (Image 2)"
-  },
-  {
-    "url": "https://img.sorayt.cn/f/5KUX/vv4.jpeg",
-    "title": "直播花絮",
-    "link": "/carousel/shot/zb/zbhx",
-    "alt": "直播花絮 (Image 1)"
-  },
-  {
-    "url": "https://img.sorayt.cn/f/q4cz/vv5.jpeg",
-    "title": "直播花絮",
-    "link": "/carousel/shot/zb/zbhx",
-    "alt": "直播花絮 (Image 2)"
+    "alt": "另一篇文章标题",
+    "title": "另一篇文章标题",
+    "link": "/docs/另一篇文章路径"
   }
 ]

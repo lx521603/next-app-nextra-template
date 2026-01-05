@@ -1,4 +1,3 @@
-// lib/posts.ts
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
@@ -9,6 +8,11 @@ export interface Post {
   slug: string;
   title: string;
   tags: string[];
+  gallery?: string[];
+  featured?: boolean;
+  date?: string;
+  excerpt?: string;
+  coverImage?: string;
 }
 
 // 递归获取所有 MDX 文件
@@ -38,75 +42,89 @@ function getAllMdxFiles(dir: string = contentDirectory): string[] {
 
 export function getAllPosts(): Post[] {
   try {
-    console.log('🔍 开始扫描 content 目录（包含子目录）...');
+    console.log('🔍 扫描 content 目录...');
     
     const allMdxFiles = getAllMdxFiles();
-    console.log('📁 找到的 MDX 文件:', allMdxFiles);
+    console.log(`📁 找到 ${allMdxFiles.length} 个 MDX 文件`);
     
     const posts: Post[] = [];
+    let galleryCount = 0;
     
     for (const fullPath of allMdxFiles) {
-      // 计算相对于 content 目录的路径作为 slug
       const relativePath = path.relative(contentDirectory, fullPath);
       const slug = relativePath.replace(/\.mdx$/, '').replace(/\\/g, '/');
       
-      console.log(`\n🔍 处理文件: ${relativePath}`);
-      console.log(`📁 完整路径: ${fullPath}`);
-      console.log(`🔗 生成的slug: ${slug}`);
-      
       try {
         const fileContents = fs.readFileSync(fullPath, 'utf8');
-        console.log(`✅ 文件读取成功，大小: ${fileContents.length} 字符`);
         
         if (!fileContents.startsWith('---')) {
-          console.log(`❌ 跳过: 文件不以 --- 开头`);
-          console.log(`📝 文件开头: ${fileContents.substring(0, 50)}`);
           continue;
         }
         
-        console.log(`✅ 检测到 Front Matter`);
-        
         const matterResult = matter(fileContents);
-        console.log('📄 Front Matter 数据:', matterResult.data);
-        console.log('🔑 Front Matter 键:', Object.keys(matterResult.data));
+        const data = matterResult.data;
         
-        const title = matterResult.data.title || path.basename(slug);
+        // 处理 tags
         let tags: string[] = [];
-        
-        if (matterResult.data.tags) {
-          console.log(`🏷️  找到 tags 字段:`, matterResult.data.tags);
-          console.log(`🔍 tags 类型:`, typeof matterResult.data.tags);
-          
-          if (Array.isArray(matterResult.data.tags)) {
-            tags = matterResult.data.tags;
-            console.log(`✅ 标签是数组:`, tags);
-          } else if (typeof matterResult.data.tags === 'string') {
-            tags = matterResult.data.tags.split(',').map(tag => tag.trim());
-            console.log(`🔄 标签是字符串，分割后:`, tags);
+        if (data.tags) {
+          if (Array.isArray(data.tags)) {
+            tags = data.tags;
+          } else if (typeof data.tags === 'string') {
+            tags = data.tags.split(',').map(tag => tag.trim());
           }
-        } else {
-          console.log(`❌ 没有 tags 字段`);
+        }
+        
+        // 处理 gallery - 关键修复！
+        let gallery: string[] = [];
+        if (data.gallery) {
+          console.log(`🖼️  发现 gallery 在 ${slug}`);
+          
+          if (Array.isArray(data.gallery)) {
+            gallery = data.gallery.filter(img => img && typeof img === 'string').map(img => img.trim());
+            console.log(`   ✅ gallery 是数组，有 ${gallery.length} 张图片`);
+          } else if (typeof data.gallery === 'string') {
+            // YAML 格式可能是多行字符串
+            const galleryStr = data.gallery;
+            if (galleryStr.includes('- ')) {
+              // YAML 列表格式: "- url1\n- url2"
+              gallery = galleryStr.split('\n')
+                .map(line => line.trim())
+                .filter(line => line.startsWith('- '))
+                .map(line => line.substring(2).trim());
+            } else if (galleryStr.includes(',')) {
+              // 逗号分隔
+              gallery = galleryStr.split(',').map(img => img.trim());
+            } else {
+              // 单张图片
+              gallery = [galleryStr.trim()];
+            }
+            console.log(`   ✅ gallery 是字符串，解析出 ${gallery.length} 张图片`);
+          }
+          
+          if (gallery.length > 0) {
+            galleryCount++;
+          }
         }
         
         const post: Post = {
-          slug: slug,
-          title,
-          tags
+          slug,
+          title: data.title || path.basename(slug),
+          tags,
+          gallery: gallery.length > 0 ? gallery : undefined,
+          featured: data.featured === true || data.highlight === true || data.spotlight === true,
+          date: data.date,
+          excerpt: data.excerpt || data.description,
+          coverImage: data.coverImage || data.image
         };
         
         posts.push(post);
-        console.log(`✅ 添加文章: ${title}, 标签: ${tags.join(', ')}`);
         
       } catch (error) {
-        console.error(`❌ 处理文件失败:`, error);
+        console.error(`❌ 处理文件失败 ${relativePath}:`, error.message);
       }
     }
     
-    console.log('=== 最终统计 ===');
-    console.log('找到文章数量:', posts.length);
-    posts.forEach((post, index) => {
-      console.log(`${index + 1}. ${post.title} (${post.slug}) - 标签: ${post.tags.join(', ')}`);
-    });
+    console.log(`✅ 扫描完成: ${posts.length} 篇文章，${galleryCount} 篇有 gallery`);
     
     return posts;
     
@@ -114,6 +132,16 @@ export function getAllPosts(): Post[] {
     console.error('❌ 扫描目录失败:', error);
     return [];
   }
+}
+
+export function getPostsWithGallery(): Post[] {
+  const posts = getAllPosts();
+  return posts.filter(post => post.gallery && post.gallery.length > 0);
+}
+
+export function getFeaturedPosts(): Post[] {
+  const posts = getAllPosts();
+  return posts.filter(post => post.featured);
 }
 
 export function getAllTags(): Record<string, number> {
@@ -131,7 +159,6 @@ export function getAllTags(): Record<string, number> {
     tagCounts[tag] = (tagCounts[tag] || 0) + 1;
   });
   
-  console.log('📊 标签统计:', tagCounts);
   return tagCounts;
 }
 
